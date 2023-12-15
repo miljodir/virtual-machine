@@ -1,5 +1,8 @@
 # Azure Virtual Machines Terraform Module
 
+[![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](https://github.com/miljodir/terraform-azurerm-virtual-machine/wiki/main#changelog)
+[![TF Registry](https://img.shields.io/badge/terraform-registry-blue.svg)](https://registry.terraform.io/modules/miljodir/virtual-machine/azurerm/)
+
 This terraform module is designed to deploy azure Windows or Linux virtual machines with Public IP, Availability Set and Network Security Group support. This module also works for AVD (Azure Virtual Desktop) deployments.
 
 These types of resources supported:
