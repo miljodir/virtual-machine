@@ -123,6 +123,17 @@ resource "azurerm_virtual_machine_extension" "custom_script_extension" {
 #--------------------------------------------------------------
 # Extension AVD register session host
 #--------------------------------------------------------------
+
+locals {
+  # Newer versions of the DSC do not support aadJoin as input, so we need to conditionally set the properties
+  avd_extension_properties = var.avd_register_session_host["aad_join"] == true ? {
+    hostPoolName = var.avd_register_session_host["host_pool_name"]
+    } : {
+    hostPoolName = var.avd_register_session_host["host_pool_name"],
+    aadJoin      = true
+  }
+}
+
 resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
   count                = var.avd_register_session_host == null ? 0 : 1
   name                 = "register-session-host-vmext"
@@ -131,14 +142,11 @@ resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
   type                 = "DSC"
   type_handler_version = "2.73"
 
-  settings = jsonencode({
+  settings = merge(jsonencode({
     "modulesUrl" : var.avd_register_session_host["module_url"],
     "configurationFunction" : "Configuration.ps1\\AddSessionHost",
-    "properties" : {
-      "hostPoolName" : var.avd_register_session_host["host_pool_name"],
-      "aadJoin" : var.avd_register_session_host["aad_join"],
-    }
-  })
+    }),
+  local.avd_extension_properties)
   protected_settings = jsonencode({
     "properties" : {
       "registrationInfoToken" : var.avd_register_session_host["registration_info_token"]
