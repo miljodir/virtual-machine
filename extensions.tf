@@ -136,7 +136,7 @@ resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
     "configurationFunction" : "Configuration.ps1\\AddSessionHost",
     "properties" : {
       "hostPoolName" : var.avd_register_session_host["host_pool_name"],
-      "aadJoin" : true
+      "aadJoin" : var.avd_register_session_host["aad_join"],
     }
   })
   protected_settings = jsonencode({
