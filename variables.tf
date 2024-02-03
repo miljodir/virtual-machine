@@ -350,6 +350,7 @@ variable "avd_register_session_host" {
     module_url              = optional(string, "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_02-23-2022.zip")
     host_pool_name          = string
     registration_info_token = string
+    aad_join                = optional(bool, true)
   })
   default     = null
   description = "Register VM to a host pool. Only works for Windows VMs and it needs to be aad joined"
