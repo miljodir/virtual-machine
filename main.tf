@@ -59,7 +59,8 @@ resource "azurerm_managed_disk" "datadisks_create" {
 
   lifecycle {
     ignore_changes = [
-      encryption_settings
+      encryption_settings,
+      zone
     ]
   }
 }
@@ -186,6 +187,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   lifecycle {
     ignore_changes = [
       timezone,
+      zone,
       identity
     ]
   }
