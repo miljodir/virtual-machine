@@ -35,8 +35,8 @@ resource "azapi_resource" "win_vm" {
       enableAutomaticUpdates = var.enable_automatic_updates
       patchMode              = var.patch_mode
       provisionVmAgent       = var.provision_vm_agent
-      timeZone               = var.timezone
-      enableHotpatching      = true
+      #timeZone               = var.timezone
+      enableHotpatching = true
       osProfile = {
         adminPassword            = var.admin_password == null ? random_password.passwd[0].result : var.admin_password
         adminUsername            = var.admin_username
@@ -67,7 +67,6 @@ resource "azapi_resource" "win_vm" {
 
   lifecycle {
     ignore_changes = [
-      timeZone,
       identity
     ]
   }
