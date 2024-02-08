@@ -364,3 +364,10 @@ variable "managed_identity_roles" {
   default     = {}
   description = "List of roles to assign to the managed identity"
 }
+
+
+variable "use_azapi" {
+  type        = bool
+  description = "Set to true if you want to use azapi to create the VM"
+  default     = false
+}
