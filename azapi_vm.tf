@@ -1,10 +1,14 @@
 # This resource only exists to support preview features. It was originally created to support hibernation which must be enabled on VM creation
 # See https://github.com/hashicorp/terraform-provider-azurerm/issues/24780 for details
 
+locals {
+  vm_parent_id = trimsuffix(azurerm_network_interface.nic.id, "/providers/Microsoft.Network/networkInterfaces/${azurerm_network_interface.nic.name}")
+}
+
 resource "azapi_resource" "win_vm" {
   count     = var.os_flavor == "windows" && var.use_azapi == true ? 1 : 0
   type      = "Microsoft.Compute/virtualMachines@2023-03-01"
-  parent_id = var.resource_group_name
+  parent_id = local.vm_parent_id
   location  = var.location
   body = jsonencode({
     properties = {

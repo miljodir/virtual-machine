@@ -126,7 +126,7 @@ resource "azurerm_virtual_machine_extension" "custom_script_extension" {
 resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
   count                = var.avd_register_session_host == null ? 0 : 1
   name                 = "register-session-host-vmext"
-  virtual_machine_id   = azurerm_windows_virtual_machine.win_vm[count.index].id
+  virtual_machine_id   = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[count.index].id : azapi_resource.win_vm[count.index].id
   publisher            = "Microsoft.Powershell"
   type                 = "DSC"
   type_handler_version = "2.73"
