@@ -48,10 +48,10 @@ resource "azapi_resource" "win_vm" {
         computerName             = var.host_name
 
         windowsConfiguration = {
-          enableHotpatching      = true
           enableAutomaticUpdates = var.enable_automatic_updates
           patchSettings = {
-            patchMode = var.patch_mode
+            patchMode         = var.patch_mode
+            enableHotpatching = true
           }
           provisionVMAgent = var.provision_vm_agent
           timeZone         = var.timezone
