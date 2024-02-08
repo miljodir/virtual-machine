@@ -9,6 +9,7 @@ resource "azapi_resource" "win_vm" {
   count     = var.os_flavor == "windows" && var.use_azapi == true ? 1 : 0
   type      = "Microsoft.Compute/virtualMachines@2023-03-01"
   parent_id = local.vm_parent_id
+  name      = var.virtual_machine_name
   location  = var.location
   body = jsonencode({
     properties = {
