@@ -14,7 +14,9 @@ resource "azapi_resource" "win_vm" {
   identity {
     type = "SystemAssigned"
   }
+
   body = jsonencode({
+    zones = [var.availability_zone]
     properties = {
       additionalCapabilities = {
         hibernationEnabled = true
@@ -46,10 +48,10 @@ resource "azapi_resource" "win_vm" {
         computerName             = var.host_name
 
         windowsConfiguration = {
+          enableHotpatching      = true
+          enableAutomaticUpdates = var.enable_automatic_updates
           patchSettings = {
-            enableHotpatching      = true
-            enableAutomaticUpdates = var.enable_automatic_updates
-            patchMode              = var.patch_mode
+            patchMode = var.patch_mode
           }
           provisionVMAgent = var.provision_vm_agent
           timeZone         = var.timezone
@@ -58,9 +60,10 @@ resource "azapi_resource" "win_vm" {
       priority = "Regular"
       storageProfile = {
         osDisk = {
-          storage_account_type = var.os_disk_storage_account_type
-          caching              = "ReadWrite"
-          name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
+          #storage_account_type = var.os_disk_storage_account_type
+          createOption = "Empty"
+          caching      = "ReadWrite"
+          name         = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
         }
         imageReference = {
           publisher = local.image["publisher"]
@@ -69,7 +72,6 @@ resource "azapi_resource" "win_vm" {
           version   = local.image["version"]
         }
       }
-      zones = [var.availability_zone]
     }
   })
 
