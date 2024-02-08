@@ -24,7 +24,7 @@ resource "azapi_resource" "win_vm" {
       networkProfile = {
         networkInterfaces = [
           {
-            id = azapi_resource.networkInterface.id
+            id = azurerm_network_interface.nic.id
             properties = {
               primary = true
             }
