@@ -16,7 +16,7 @@ resource "azapi_resource" "win_vm" {
   }
 
   body = jsonencode({
-    zones = [var.availability_zone]
+    zones = [tostring(var.availability_zone)]
     properties = {
       additionalCapabilities = {
         hibernationEnabled = true
