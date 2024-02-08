@@ -11,15 +11,15 @@ resource "azapi_resource" "win_vm" {
   parent_id = local.vm_parent_id
   name      = var.virtual_machine_name
   location  = var.location
+  identity {
+    type = "SystemAssigned"
+  }
   body = jsonencode({
     properties = {
       additionalCapabilities = {
         hibernationEnabled = true
       }
       licenseType = var.license_type
-      identity = {
-        type = "SystemAssigned"
-      }
 
       diagnosticsProfile = {
         bootDiagnostics = {
@@ -44,29 +44,30 @@ resource "azapi_resource" "win_vm" {
         adminUsername            = var.admin_username
         allowExtensionOperations = true
         computerName             = var.host_name
+
+        windowsConfiguration = {
+          patchSettings = {
+            enableHotpatching      = true
+            enableAutomaticUpdates = var.enable_automatic_updates
+            patchMode              = var.patch_mode
+          }
+          provisionVMAgent = var.provision_vm_agent
+          timeZone         = var.timezone
+        }
       }
       priority = "Regular"
       storageProfile = {
+        osDisk = {
+          storage_account_type = var.os_disk_storage_account_type
+          caching              = "ReadWrite"
+          name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
+        }
         imageReference = {
           publisher = local.image["publisher"]
           offer     = local.image["offer"]
           sku       = local.image["sku"]
           version   = local.image["version"]
         }
-      }
-      osDisk = {
-        storage_account_type = var.os_disk_storage_account_type
-        caching              = "ReadWrite"
-        name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
-      }
-      windowsConfiguration = {
-        patchSettings = {
-          enableHotpatching      = true
-          enableAutomaticUpdates = var.enable_automatic_updates
-          patchMode              = var.patch_mode
-        }
-        provisionVMAgent = var.provision_vm_agent
-        timeZone         = var.timezone
       }
       zones = [var.availability_zone]
     }
