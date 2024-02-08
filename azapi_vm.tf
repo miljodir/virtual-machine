@@ -17,6 +17,9 @@ resource "azapi_resource" "win_vm" {
         hibernationEnabled = true
       }
       licenseType = var.license_type
+      identity = {
+        type = "SystemAssigned"
+      }
 
       diagnosticsProfile = {
         bootDiagnostics = {
@@ -36,25 +39,14 @@ resource "azapi_resource" "win_vm" {
           },
         ]
       }
-      zones                  = var.availability_zone
-      enableAutomaticUpdates = var.enable_automatic_updates
-      patchMode              = var.patch_mode
-      provisionVmAgent       = var.provision_vm_agent
-      #timeZone               = var.timezone
-      enableHotpatching = true
       osProfile = {
         adminPassword            = var.admin_password == null ? random_password.passwd[0].result : var.admin_password
         adminUsername            = var.admin_username
         allowExtensionOperations = true
         computerName             = var.host_name
       }
-      identity = {
-        type = "SystemAssigned"
-      }
       priority = "Regular"
       storageProfile = {
-        dataDisks = [
-        ]
         imageReference = {
           publisher = local.image["publisher"]
           offer     = local.image["offer"]
@@ -67,6 +59,16 @@ resource "azapi_resource" "win_vm" {
         caching              = "ReadWrite"
         name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
       }
+      windowsConfiguration = {
+        patchSettings = {
+          enableHotpatching      = true
+          enableAutomaticUpdates = var.enable_automatic_updates
+          patchMode              = var.patch_mode
+        }
+        provisionVMAgent = var.provision_vm_agent
+        timeZone         = var.timezone
+      }
+      zones = [var.availability_zone]
     }
   })
 
