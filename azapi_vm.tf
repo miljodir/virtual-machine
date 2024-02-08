@@ -61,7 +61,7 @@ resource "azapi_resource" "win_vm" {
       storageProfile = {
         osDisk = {
           #storage_account_type = var.os_disk_storage_account_type
-          createOption = "Empty"
+          createOption = "FromImage"
           caching      = "ReadWrite"
           name         = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
         }
