@@ -45,7 +45,7 @@ resource "azapi_resource" "win_vm" {
         adminPassword            = var.admin_password == null ? random_password.passwd[0].result : var.admin_password
         adminUsername            = var.admin_username
         allowExtensionOperations = true
-        computerName             = var.host_name
+        computerName             = var.host_name != null ? var.host_name : var.virtual_machine_name
 
         windowsConfiguration = {
           enableAutomaticUpdates = var.enable_automatic_updates
