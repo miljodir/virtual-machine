@@ -51,7 +51,7 @@ resource "azapi_resource" "win_vm" {
           enableAutomaticUpdates = var.enable_automatic_updates
           patchSettings = {
             patchMode         = var.patch_mode
-            enableHotpatching = true
+            enableHotpatching = local.image["offer"] == "WindowsServer" ? true : false
           }
           provisionVMAgent = var.provision_vm_agent
           timeZone         = var.timezone
