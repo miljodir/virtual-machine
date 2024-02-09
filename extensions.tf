@@ -8,7 +8,10 @@ resource "azurerm_virtual_machine_extension" "aad_extension_windows" {
   type                       = "AADLoginForWindows"
   type_handler_version       = "1.0"
   auto_upgrade_minor_version = true
-  virtual_machine_id         = azurerm_windows_virtual_machine.win_vm[0].id
+  virtual_machine_id         = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0].id : azapi_resource.win_vm[0].id
+  settings = jsonencode({
+    "mdmId" : var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0].identity[0].principal_id : azapi_resource.win_vm[0].identity[0].principal_id
+  })
 }
 
 #--------------------------------------------------------------
