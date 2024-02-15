@@ -1,6 +1,10 @@
 #--------------------------------------------------------------
 # Enable AAD Login for Windows
 #--------------------------------------------------------------
+
+locals {
+  mdm_settings = var.os_flavor == "windows" && local.image["offer"] == "Windows-11" ? jsonencode({ "mdmId" = "0000000a-0000-0000-c000-000000000000" }) : null
+}
 resource "azurerm_virtual_machine_extension" "aad_extension_windows" {
   count                      = var.os_flavor == "windows" && var.enable_aad_login == true ? 1 : 0
   name                       = "AADLoginForWindows"
@@ -10,9 +14,7 @@ resource "azurerm_virtual_machine_extension" "aad_extension_windows" {
   auto_upgrade_minor_version = true
   virtual_machine_id         = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0].id : azapi_resource.win_vm[0].id
 
-  settings = jsonencode({
-    "mdmId" : var.os_flavor == "windows" && local.image["offer"] == "Windows-11" ? "0000000a-0000-0000-c000-000000000000" : null
-  })
+  settings = local.mdm_settings
 }
 
 #--------------------------------------------------------------
