@@ -59,7 +59,8 @@ resource "azurerm_managed_disk" "datadisks_create" {
 
   lifecycle {
     ignore_changes = [
-      encryption_settings
+      encryption_settings,
+      zone
     ]
   }
 }
