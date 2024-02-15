@@ -3,7 +3,7 @@
 #--------------------------------------------------------------
 
 locals {
-  mdm_settings = var.os_flavor == "windows" && local.image["offer"] == "Windows-11" ? jsonencode({ "mdmId" = "0000000a-0000-0000-c000-000000000000" }) : null
+  mdm_settings = local.image["offer"] == "Windows-11" || local.image["offer"] == "Windows-10" ? jsonencode({ "mdmId" = "0000000a-0000-0000-c000-000000000000" }) : null
 }
 resource "azurerm_virtual_machine_extension" "aad_extension_windows" {
   count                      = var.os_flavor == "windows" && var.enable_aad_login == true ? 1 : 0
