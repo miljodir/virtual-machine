@@ -187,7 +187,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   lifecycle {
     ignore_changes = [
       timezone,
-      identity
+      identity,
+      zone
     ]
   }
 }
