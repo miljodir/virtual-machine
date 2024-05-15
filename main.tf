@@ -118,11 +118,10 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
 
   dynamic "additional_capabilities" {
     for_each = try(var.additional_capabilities, false) == false ? [] : [1]
-    iterator = "capability"
 
     content {
-      ultra_ssd_enabled   = capability.value["ultra_ssd_enabled"]
-      hibernation_enabled = capability.value["hibernation_enabled"]
+      ultra_ssd_enabled   = additional_capabilities.value["ultra_ssd_enabled"]
+      hibernation_enabled = additional_capabilities.value["hibernation_enabled"]
     }
   }
 
@@ -190,8 +189,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     for_each = try(var.additional_capabilities, false) == false ? [] : [1]
 
     content {
-      ultra_ssd_enabled   = each.value.additional_capabilities.ultra_ssd_enabled
-      hibernation_enabled = each.value.additional_capabilities.hibernation_enabled
+      ultra_ssd_enabled   = additional_capabilities.value["ultra_ssd_enabled"]
+      hibernation_enabled = additional_capabilities.value["hibernation_enabled"]
     }
   }
 
