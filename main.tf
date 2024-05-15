@@ -68,7 +68,7 @@ resource "azurerm_managed_disk" "datadisks_create" {
 resource "azurerm_virtual_machine_data_disk_attachment" "datadisks_attach" {
   for_each           = var.datadisks
   managed_disk_id    = azurerm_managed_disk.datadisks_create[each.key].id
-  virtual_machine_id = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0].id : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[0].id : azurerm_linux_virtual_machine.linux_vm[0].id
+  virtual_machine_id = var.os_flavor == "windows" ? azurerm_windows_virtual_machine.win_vm[0].id : azurerm_linux_virtual_machine.linux_vm[0].id
   lun                = each.value.lun
   caching            = each.value.caching
 }
@@ -116,6 +116,15 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     disk_size_gb         = var.os_disk_size_gb != null ? var.os_disk_size_gb : null
   }
 
+  dynamic "additional_capabilities" {
+    for_each = var.additional_capabilities == null ? [] : ["additional_capabilities"]
+
+    content {
+      ultra_ssd_enabled   = var.additional_capabilities.ultra_ssd_enabled
+      hibernation_enabled = var.additional_capabilities.hibernation_enabled
+    }
+  }
+
   boot_diagnostics {}
 
   dynamic "identity" {
@@ -127,7 +136,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
 
   lifecycle {
     ignore_changes = [
-      identity
+      identity,
+      source_image_reference[0],
     ]
   }
 }
@@ -138,9 +148,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
 # Because of windows hostname limitations, prefix is omitted
 #---------------------------------------
 # var.disable_password_authentication != true && var.admin_password == null ? try(random_password.passwd[0].result, null) : var.admin_password
-
 resource "azurerm_windows_virtual_machine" "win_vm" {
-  count                                                  = var.os_flavor == "windows" && var.use_azapi == false ? 1 : 0
+  count                                                  = var.os_flavor == "windows" ? 1 : 0
   name                                                   = var.virtual_machine_name
   computer_name                                          = var.host_name
   resource_group_name                                    = var.resource_group_name
@@ -176,6 +185,15 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
   }
 
+  dynamic "additional_capabilities" {
+    for_each = var.additional_capabilities == null ? [] : ["additional_capabilities"]
+
+    content {
+      ultra_ssd_enabled   = var.additional_capabilities.ultra_ssd_enabled
+      hibernation_enabled = var.additional_capabilities.hibernation_enabled
+    }
+  }
+
   boot_diagnostics {}
 
   dynamic "identity" {
@@ -188,8 +206,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   lifecycle {
     ignore_changes = [
       timezone,
-      identity,
-      zone
+      zone,
+      identity
     ]
   }
 }
@@ -201,9 +219,8 @@ resource "azurerm_maintenance_assignment_virtual_machine" "main" {
   count                        = var.patch_mode == "AutomaticByPlatform" && var.maintenance_configuration_id != null ? 1 : 0
   location                     = var.location
   maintenance_configuration_id = var.maintenance_configuration_id
-  virtual_machine_id           = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0].id : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[0].id : azurerm_linux_virtual_machine.linux_vm[0].id
+  virtual_machine_id           = var.os_flavor == "windows" ? azurerm_windows_virtual_machine.win_vm[0].id : azurerm_linux_virtual_machine.linux_vm[0].id
 }
-
 
 #--------------------------------------------------------------
 # SystemAssigned identity roles

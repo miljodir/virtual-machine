@@ -17,5 +17,5 @@ output "windows_vm_password" {
 
 output "virtual_machine" {
   description = "The Virtual Machine object"
-  value       = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0] : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[0] : azurerm_linux_virtual_machine.linux_vm[0]
+  value       = var.os_flavor == "linux" ? azurerm_linux_virtual_machine.linux_vm[0] : azurerm_windows_virtual_machine.win_vm[0]
 }
