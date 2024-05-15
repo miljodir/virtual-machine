@@ -370,6 +370,6 @@ variable "additional_capabilities" {
     ultra_ssd_enabled   = optional(bool, false)
     hibernation_enabled = optional(bool, true)
   })
-  default     = {}
+  default     = null
   description = "Additional capabilities for the VM"
 }
