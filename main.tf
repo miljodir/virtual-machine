@@ -138,7 +138,6 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     ignore_changes = [
       identity,
       source_image_reference[0],
-      additional_capabilities
     ]
   }
 }
