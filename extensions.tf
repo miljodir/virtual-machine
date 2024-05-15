@@ -1,7 +1,6 @@
 #--------------------------------------------------------------
 # Enable AAD Login for Windows
 #--------------------------------------------------------------
-
 locals {
   mdm_settings = local.image["offer"] == "Windows-11" || local.image["offer"] == "Windows-10" ? jsonencode({ "mdmId" = "0000000a-0000-0000-c000-000000000000" }) : null
 }
@@ -12,11 +11,10 @@ resource "azurerm_virtual_machine_extension" "aad_extension_windows" {
   type                       = "AADLoginForWindows"
   type_handler_version       = "1.0"
   auto_upgrade_minor_version = true
-  virtual_machine_id         = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[0].id : azapi_resource.win_vm[0].id
+  virtual_machine_id         = azurerm_windows_virtual_machine.win_vm[0].id
 
   settings = local.mdm_settings
 }
-
 #--------------------------------------------------------------
 # Enable AAD Login for Linux
 #--------------------------------------------------------------
@@ -40,7 +38,7 @@ resource "azurerm_virtual_machine_extension" "extension" {
   publisher                   = var.vm_extension.publisher
   type                        = var.vm_extension.type
   type_handler_version        = var.vm_extension.type_handler_version
-  virtual_machine_id          = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[count.index].id : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
+  virtual_machine_id          = var.os_flavor == "windows" ? azurerm_windows_virtual_machine.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
   auto_upgrade_minor_version  = var.vm_extension.auto_upgrade_minor_version
   automatic_upgrade_enabled   = var.vm_extension.automatic_upgrade_enabled
   failure_suppression_enabled = var.vm_extension.failure_suppression_enabled
@@ -63,7 +61,7 @@ resource "azurerm_virtual_machine_extension" "extension" {
 resource "azurerm_virtual_machine_extension" "disk_encryption_windows" {
   count                      = lower(var.os_flavor) == "windows" && var.enable_disk_encryption == true ? 1 : 0
   name                       = "AzureDiskEncryption"
-  virtual_machine_id         = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[count.index].id : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
+  virtual_machine_id         = var.os_flavor == "windows" ? azurerm_windows_virtual_machine.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
   publisher                  = "Microsoft.Azure.Security"
   type                       = "AzureDiskEncryption"
   type_handler_version       = var.type_handler_version != null ? var.type_handler_version : "2.2"
@@ -85,7 +83,7 @@ resource "azurerm_virtual_machine_extension" "disk_encryption_windows" {
 resource "azurerm_virtual_machine_extension" "disk_encryption_linux" {
   count                      = lower(var.os_flavor) == "linux" && var.enable_disk_encryption == true ? 1 : 0
   name                       = "AzureDiskEncryption"
-  virtual_machine_id         = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[count.index].id : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
+  virtual_machine_id         = var.os_flavor == "windows" ? azurerm_windows_virtual_machine.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
   publisher                  = "Microsoft.Azure.Security"
   type                       = "AzureDiskEncryptionForLinux"
   type_handler_version       = var.type_handler_version != null ? var.type_handler_version : "1.1"
@@ -113,7 +111,7 @@ resource "azurerm_virtual_machine_extension" "custom_script_extension" {
   publisher            = var.os_flavor == "windows" ? "Microsoft.Compute" : "Microsoft.Azure.Extensions"
   type                 = var.os_flavor == "windows" ? "CustomScriptExtension" : "CustomScript"
   type_handler_version = var.os_flavor == "windows" ? "1.10" : "2.1"
-  virtual_machine_id   = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[count.index].id : var.os_flavor == "windows" && var.use_azapi == true ? azapi_resource.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
+  virtual_machine_id   = var.os_flavor == "windows" ? azurerm_windows_virtual_machine.win_vm[count.index].id : azurerm_linux_virtual_machine.linux_vm[count.index].id
 
   settings = jsonencode({
     "timestamp" : var.custom_script_extension["rerun_script_extension"]
@@ -132,7 +130,7 @@ resource "azurerm_virtual_machine_extension" "custom_script_extension" {
 resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
   count                = var.avd_register_session_host == null ? 0 : 1
   name                 = "register-session-host-vmext"
-  virtual_machine_id   = var.os_flavor == "windows" && var.use_azapi == false ? azurerm_windows_virtual_machine.win_vm[count.index].id : azapi_resource.win_vm[count.index].id
+  virtual_machine_id   = azurerm_windows_virtual_machine.win_vm[count.index].id
   publisher            = "Microsoft.Powershell"
   type                 = "DSC"
   type_handler_version = "2.73"
@@ -142,6 +140,7 @@ resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
     "configurationFunction" : "Configuration.ps1\\AddSessionHost",
     "properties" : {
       "hostPoolName" : var.avd_register_session_host["host_pool_name"],
+      "aadJoin" : var.avd_register_session_host["aad_join"],
     }
   })
   protected_settings = jsonencode({
@@ -154,5 +153,4 @@ resource "azurerm_virtual_machine_extension" "avd_register_session_host" {
     ignore_changes = [settings, protected_settings, tags]
   }
   depends_on = [azurerm_virtual_machine_extension.aad_extension_windows]
-
 }
