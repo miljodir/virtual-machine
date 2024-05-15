@@ -117,11 +117,11 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   }
 
   dynamic "additional_capabilities" {
-    for_each = try(var.additional_capabilities, false) == false ? [] : [1]
+    for_each = var.additional_capabilities == null ? [] : ["additional_capabilities"]
 
     content {
-      ultra_ssd_enabled   = additional_capabilities.value["ultra_ssd_enabled"]
-      hibernation_enabled = additional_capabilities.value["hibernation_enabled"]
+      ultra_ssd_enabled   = var.additional_capabilities.ultra_ssd_enabled
+      hibernation_enabled = var.additional_capabilities.hibernation_enabled
     }
   }
 
