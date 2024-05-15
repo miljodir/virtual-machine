@@ -116,8 +116,13 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     disk_size_gb         = var.os_disk_size_gb != null ? var.os_disk_size_gb : null
   }
 
-  additional_capabilities  {
-    hibernation_enabled = var.hibernation_enabled
+  dynamic "additional_capabilities" {
+    for_each = try(var.additional_capabilities, false) == false ? [] : [1]
+
+    content {
+      ultra_ssd_enabled   = each.value.additional_capabilities.ultra_ssd_enabled
+      hibernation_enabled = each.value.additional_capabilities.hibernation_enabled
+    }
   }
 
   boot_diagnostics {}
@@ -132,7 +137,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   lifecycle {
     ignore_changes = [
       identity,
-      source_image_reference
+      source_image_reference[0],
+      additional_capabilities
     ]
   }
 }
@@ -180,8 +186,13 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
   }
 
-  additional_capabilities  {
-    hibernation_enabled = var.hibernation_enabled
+  dynamic "additional_capabilities" {
+    for_each = try(var.additional_capabilities, false) == false ? [] : [1]
+
+    content {
+      ultra_ssd_enabled   = each.value.additional_capabilities.ultra_ssd_enabled
+      hibernation_enabled = each.value.additional_capabilities.hibernation_enabled
+    }
   }
 
   boot_diagnostics {}

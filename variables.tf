@@ -365,10 +365,11 @@ variable "managed_identity_roles" {
   description = "List of roles to assign to the managed identity"
 }
 
-
-variable "hibernation_enabled" {
-  type        = bool
-  description = "Enables support for hibernation on the VM. Defaults to false."
-  default     = false
-  
+variable "additional_capabilities" {
+  type = object({
+    ultra_ssd_enabled   = optional(bool, false)
+    hibernation_enabled = optional(bool, true)
+  })
+  default     = {}
+  description = "Additional capabilities for the VM"
 }
