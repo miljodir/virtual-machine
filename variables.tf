@@ -366,8 +366,9 @@ variable "managed_identity_roles" {
 }
 
 
-variable "use_azapi" {
+variable "hibernation_enabled" {
   type        = bool
-  description = "Set to true if you want to use azapi to create the VM"
+  description = "Enables support for hibernation on the VM. Defaults to false."
   default     = false
+  
 }

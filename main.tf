@@ -116,6 +116,10 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     disk_size_gb         = var.os_disk_size_gb != null ? var.os_disk_size_gb : null
   }
 
+  additional_capabilities  {
+    hibernation_enabled = var.hibernation_enabled
+  }
+
   boot_diagnostics {}
 
   dynamic "identity" {
@@ -174,6 +178,10 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     storage_account_type = var.os_disk_storage_account_type
     caching              = "ReadWrite"
     name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
+  }
+
+  additional_capabilities  {
+    hibernation_enabled = var.hibernation_enabled
   }
 
   boot_diagnostics {}
