@@ -118,10 +118,11 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
 
   dynamic "additional_capabilities" {
     for_each = try(var.additional_capabilities, false) == false ? [] : [1]
+    iterator = "capability"
 
     content {
-      ultra_ssd_enabled   = each.value.additional_capabilities.ultra_ssd_enabled
-      hibernation_enabled = each.value.additional_capabilities.hibernation_enabled
+      ultra_ssd_enabled   = capability.value["ultra_ssd_enabled"]
+      hibernation_enabled = capability.value["hibernation_enabled"]
     }
   }
 
