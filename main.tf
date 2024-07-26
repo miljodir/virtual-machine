@@ -27,13 +27,13 @@ resource "random_password" "passwd" {
 # Network Interface for Virtual Machine
 #---------------------------------------
 resource "azurerm_network_interface" "nic" {
-  name                          = "${var.virtual_machine_name}-nic"
-  resource_group_name           = var.resource_group_name
-  location                      = var.location
-  dns_servers                   = var.dns_servers
-  enable_ip_forwarding          = false
-  enable_accelerated_networking = var.enable_accelerated_networking
-  tags                          = var.tags
+  name                           = "${var.virtual_machine_name}-nic"
+  resource_group_name            = var.resource_group_name
+  location                       = var.location
+  dns_servers                    = var.dns_servers
+  ip_forwarding_enabled          = false
+  accelerated_networking_enabled = var.enable_accelerated_networking
+  tags                           = var.tags
 
   ip_configuration {
     name                          = var.ipconfig_name
