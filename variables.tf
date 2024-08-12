@@ -104,7 +104,7 @@ variable "linux_distribution_name" {
 
 variable "windows_distribution_name" {
   type        = string
-  default     = "windows2022dc"
+  default     = "windows2022azhotpatch"
   description = "Variable to pick an OS flavour for Windows based VM."
 }
 
