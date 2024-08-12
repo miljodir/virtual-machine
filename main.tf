@@ -140,6 +140,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     ignore_changes = [
       identity,
       source_image_reference[0],
+      secure_boot_enabled, # Gen2 VMs only
+      vtpm_enabled,        # Gen2 VMs only
     ]
   }
 }
@@ -211,7 +213,9 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     ignore_changes = [
       timezone,
       zone,
-      identity
+      identity,
+      secure_boot_enabled, # Gen2 VMs only
+      vtpm_enabled,        # Gen2 VMs only
     ]
   }
 }

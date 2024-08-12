@@ -376,12 +376,12 @@ variable "additional_capabilities" {
 
 variable "secure_boot_enabled" {
   type        = bool
-  description = "Enable or disable Secure Boot for the VM. Defaults to false for backward compability."
-  default     = false
+  description = "Enable or disable Secure Boot for the VM."
+  default     = true
 }
 
 variable "vtpm_enabled" {
   type        = bool
-  description = "Enable or disable Virtual Trusted Platform Module (vTPM) for the VM. Defaults to false."
-  default     = false
+  description = "Enable or disable Virtual Trusted Platform Module (vTPM) for the VM."
+  default     = true
 }
