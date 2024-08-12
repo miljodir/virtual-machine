@@ -96,6 +96,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   tags                                                   = var.tags
   patch_mode                                             = var.patch_mode
   bypass_platform_safety_checks_on_user_schedule_enabled = var.bypass_platform_safety_checks_on_user_schedule_enabled
+  secure_boot_enabled                                    = var.secure_boot_enabled
+  vtpm_enabled                                           = var.vtpm_enabled
 
   admin_ssh_key {
     username   = var.admin_username
