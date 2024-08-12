@@ -170,6 +170,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   bypass_platform_safety_checks_on_user_schedule_enabled = var.bypass_platform_safety_checks_on_user_schedule_enabled
   enable_automatic_updates                               = var.enable_automatic_updates
   timezone                                               = var.timezone
+  secure_boot_enabled                                    = var.secure_boot_enabled
+  vtpm_enabled                                           = var.vtpm_enabled
   tags                                                   = var.tags
 
   source_image_reference {
