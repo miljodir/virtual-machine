@@ -96,6 +96,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   tags                                                   = var.tags
   patch_mode                                             = var.patch_mode
   bypass_platform_safety_checks_on_user_schedule_enabled = var.bypass_platform_safety_checks_on_user_schedule_enabled
+  secure_boot_enabled                                    = var.secure_boot_enabled
+  vtpm_enabled                                           = var.vtpm_enabled
 
   admin_ssh_key {
     username   = var.admin_username
@@ -138,6 +140,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     ignore_changes = [
       identity,
       source_image_reference[0],
+      secure_boot_enabled, # Gen2 VMs only
+      vtpm_enabled,        # Gen2 VMs only
     ]
   }
 }
@@ -170,6 +174,9 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   bypass_platform_safety_checks_on_user_schedule_enabled = var.bypass_platform_safety_checks_on_user_schedule_enabled
   enable_automatic_updates                               = var.enable_automatic_updates
   timezone                                               = var.timezone
+  secure_boot_enabled                                    = var.secure_boot_enabled
+  vtpm_enabled                                           = var.vtpm_enabled
+  hotpatching_enabled                                    = var.patch_mode == "AutomaticByPlatform" && var.provision_vm_agent == true && strcontains(var.windows_distribution_name, "hotpatch") ? true : false
   tags                                                   = var.tags
 
   source_image_reference {
@@ -207,7 +214,9 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     ignore_changes = [
       timezone,
       zone,
-      identity
+      identity,
+      secure_boot_enabled, # Gen2 VMs only
+      vtpm_enabled,        # Gen2 VMs only
     ]
   }
 }
