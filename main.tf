@@ -176,7 +176,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   timezone                                               = var.timezone
   secure_boot_enabled                                    = var.secure_boot_enabled
   vtpm_enabled                                           = var.vtpm_enabled
-  hotpatching_enabled                                    = var.patch_mode == "AutomaticByPlatform" && var.provision_vm_agent == true && strcontains(var.windows_distribution_name, "hotpatch") ? true : false
+  hotpatching_enabled                                    = var.patch_mode == "AutomaticByPlatform" && var.provision_vm_agent == true && strcontains(local.image["sku"], "hotpatch") ? true : false
   tags                                                   = var.tags
 
   source_image_reference {
