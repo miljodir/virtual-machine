@@ -49,6 +49,18 @@ locals {
 
   ## Windows ##
   windows_distribution_list = {
+    windows2022azhotpatch = {
+      publisher = "MicrosoftWindowsServer"
+      offer     = "WindowsServer"
+      sku       = "2022-datacenter-azure-edition-hotpatch"
+      version   = "latest"
+    },
+    windows2022azhotpatchsmall = {
+      publisher = "MicrosoftWindowsServer"
+      offer     = "WindowsServer"
+      sku       = "2022-datacenter-azure-edition-hotpatch-smalldisk"
+      version   = "latest"
+    },
     windows2022dc = {
       publisher = "MicrosoftWindowsServer"
       offer     = "WindowsServer"

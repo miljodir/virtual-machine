@@ -104,7 +104,7 @@ variable "linux_distribution_name" {
 
 variable "windows_distribution_name" {
   type        = string
-  default     = "windows2022dc"
+  default     = "windows2022azhotpatch"
   description = "Variable to pick an OS flavour for Windows based VM."
 }
 
@@ -372,4 +372,16 @@ variable "additional_capabilities" {
   })
   default     = null
   description = "Additional capabilities for the VM"
+}
+
+variable "secure_boot_enabled" {
+  type        = bool
+  description = "Enable or disable Secure Boot for the VM."
+  default     = true
+}
+
+variable "vtpm_enabled" {
+  type        = bool
+  description = "Enable or disable Virtual Trusted Platform Module (vTPM) for the VM."
+  default     = true
 }
