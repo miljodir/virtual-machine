@@ -98,7 +98,7 @@ variable "custom_image" {
 
 variable "linux_distribution_name" {
   type        = string
-  default     = "ubuntu2204"
+  default     = "ubuntu2404"
   description = "Variable to pick an OS flavour for Linux based VM."
 }
 

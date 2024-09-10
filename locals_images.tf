@@ -5,8 +5,8 @@ locals {
   linux_distribution_list = {
     ubuntu2404 = {
       publisher = "Canonical"
-      offer     = "0001-com-ubuntu-server-noble-daily" # TODO - only see "daily" images for now
-      sku       = "24_04-daily-lts-gen2"
+      offer     = "ubuntu-24_04-lts"
+      sku       = "minimal" #"server" # TBD
       version   = "latest"
     }
     ubuntu2204 = {
