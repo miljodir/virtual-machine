@@ -3,8 +3,15 @@
 #---------------------------------------------------------------
 resource "tls_private_key" "rsa" {
   count     = var.generate_admin_ssh_key == true && var.os_flavor == "linux" ? 1 : 0
-  algorithm = "RSA"
+  algorithm = "ED25519"
   rsa_bits  = 4096
+
+  lifecycle {
+    ignore_changes = [
+      #rsa_bits,
+      algorithm
+    ]
+  }
 }
 
 #----------------------------------------------------------
