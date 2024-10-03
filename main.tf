@@ -197,6 +197,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     storage_account_type = var.os_disk_storage_account_type
     caching              = "ReadWrite"
     name                 = var.os_disk_name != null ? var.os_disk_name : "${var.virtual_machine_name}-osdisk"
+    disk_size_gb         = var.os_disk_size_gb
   }
 
   dynamic "additional_capabilities" {
