@@ -102,6 +102,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   zone                                                   = var.availability_zone
   tags                                                   = var.tags
   patch_mode                                             = var.patch_mode
+  patch_assessment_mode                                  = var.patch_assessment_mode
   bypass_platform_safety_checks_on_user_schedule_enabled = var.bypass_platform_safety_checks_on_user_schedule_enabled
   secure_boot_enabled                                    = var.secure_boot_enabled
   vtpm_enabled                                           = var.vtpm_enabled
@@ -178,6 +179,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   availability_set_id                                    = var.availability_set_id
   zone                                                   = var.availability_zone
   patch_mode                                             = var.patch_mode
+  patch_assessment_mode                                  = var.patch_assessment_mode
   bypass_platform_safety_checks_on_user_schedule_enabled = var.bypass_platform_safety_checks_on_user_schedule_enabled
   enable_automatic_updates                               = var.enable_automatic_updates
   timezone                                               = var.timezone

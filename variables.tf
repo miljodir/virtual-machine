@@ -192,6 +192,12 @@ variable "patch_mode" {
   default     = "AutomaticByOS"
 }
 
+variable "patch_assessment_mode" {
+  type        = string
+  description = "Possible values are ImageDefault, AutomaticByPlatform"
+  default     = "AutomaticByPlatform"
+}
+
 variable "bypass_platform_safety_checks_on_user_schedule_enabled" {
   type        = bool
   description = "Set to true if platform safety checks should be bypassed on user schedule. Defaults to false."
