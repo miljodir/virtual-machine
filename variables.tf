@@ -188,8 +188,8 @@ variable "enable_disk_encryption" {
 
 variable "patch_mode" {
   type        = string
-  description = "Possible values are Manual, AutomaticByOS, AutomaticByPlatform and ImageDefault. Defaults to AutomaticByOs."
-  default     = "AutomaticByOS"
+  description = "Possible values are Manual, AutomaticByOS, AutomaticByPlatform and ImageDefault"
+  default     = "AutomaticByPlatform"
 }
 
 variable "patch_assessment_mode" {
@@ -201,7 +201,7 @@ variable "patch_assessment_mode" {
 variable "bypass_platform_safety_checks_on_user_schedule_enabled" {
   type        = bool
   description = "Set to true if platform safety checks should be bypassed on user schedule. Defaults to false."
-  default     = false
+  default     = true
 }
 
 variable "enable_automatic_updates" {
