@@ -198,6 +198,12 @@ variable "patch_assessment_mode" {
   default     = "AutomaticByPlatform"
 }
 
+variable "hotpatching_enabled" {
+  type        = bool
+  description = "Enable or disable hotpatching for the VM. Defaults to false."
+  default     = false
+}
+
 variable "bypass_platform_safety_checks_on_user_schedule_enabled" {
   type        = bool
   description = "Set to true if platform safety checks should be bypassed on user schedule. Defaults to false."
