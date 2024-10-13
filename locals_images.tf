@@ -6,7 +6,7 @@ locals {
     ubuntu2404 = {
       publisher = "Canonical"
       offer     = "ubuntu-24_04-lts"
-      sku       = "minimal" #"server" # TBD
+      sku       = "server" #"minimal" # TBD
       version   = "latest"
     }
     ubuntu2204 = {
