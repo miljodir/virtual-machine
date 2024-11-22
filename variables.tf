@@ -216,6 +216,12 @@ variable "enable_automatic_updates" {
   default     = true
 }
 
+variable "vm_agent_platform_updates_enabled" {
+  type        = bool
+  description = "Enable or disable VM Agent platform updates. Defaults to true."
+  default     = true
+}
+
 variable "timezone" {
   type        = string
   description = "Time zone for virtual machine. Defaults to 'W. Europe Standard Time'. https://jackstromberg.com/2017/01/list-of-time-zones-consumed-by-azure/"
