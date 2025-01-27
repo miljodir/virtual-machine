@@ -104,7 +104,7 @@ variable "linux_distribution_name" {
 
 variable "windows_distribution_name" {
   type        = string
-  default     = "windows2022azhotpatch"
+  default     = "windows2025az"
   description = "Variable to pick an OS flavour for Windows based VM."
 }
 
@@ -213,6 +213,12 @@ variable "bypass_platform_safety_checks_on_user_schedule_enabled" {
 variable "enable_automatic_updates" {
   type        = bool
   description = "Enable automatic updates of windows VM? Defaults to true."
+  default     = true
+}
+
+variable "vm_agent_platform_updates_enabled" {
+  type        = bool
+  description = "Enable or disable VM Agent platform updates. Defaults to true."
   default     = true
 }
 
